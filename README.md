@@ -12,7 +12,7 @@ This is a Docker container that can be used to generate a closed network of TLS 
     mkdir certificates
     ```
 
- 1. Prepare the environment. docker is run with an output directory mounted to the path `/certificates` within the container.
+ 1. Prepare the environment. The certificates output directory is mounted to the path `/certificates` within the container.
 
     ```bash
     KEYMASTER="docker run --rm -v $(pwd)/certificates/:/certificates/ cloudpipe/keymaster"
