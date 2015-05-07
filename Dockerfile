@@ -1,16 +1,12 @@
-FROM debian:wheezy
-MAINTAINER smashwilson@gmail.com
+FROM ubuntu:14.04
 
-RUN useradd hagrid && \
-  apt-get update && \
+RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -q -y openssl
 
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/hagrid/
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/bin
+WORKDIR /root
 
-ADD . /home/hagrid/
-RUN chown -R hagrid:hagrid /home/hagrid
-
-USER hagrid
-WORKDIR /home/hagrid/
+ADD bin /root/bin
+ADD common /root/common
 
 CMD ["usage"]
