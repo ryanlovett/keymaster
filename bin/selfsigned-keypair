@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# Generate a self-signed keypair, independent of the generated CA.
+
+for SCRIPT in common/*.sh; do
+  source ${SCRIPT}
+done
+
+NAME=""
+LIFETIME=""
+
+FAIL="false"
+
+while getopts ":n:l:" VARNAME; do
+  case ${VARNAME} in
+    n)
+      NAME="${OPTARG}"
+      ;;
+    l)
+      LIFETIME="${OPTARG}"
+      ;;
+    \?)
+      error "Unrecognized option: -${OPTARG}"
+      FAIL="true"
+      ;;
+    :)
+      error "Option -${OPTARG} requires an argument."
+      FAIL="true"
+      ;;
+  esac
+done
+
+[ -z "${NAME}" ] && {
+  error "Missing required parameter: -n"
+  FAIL="true"
+}
+
+# Default to 365 days.
+[ -z "${LIFETIME}" ] && LIFETIME="365"
+
+if [ "${FAIL}" = "true" ]; then
+  cat <<EOM
+Usage: docker run [..] cloudpipe/keymaster selfsigned-keypair -n NAME [-l LIFETIME]
+
+Generate a public certificate and private key that are self-signed and unrelated to any other
+credentials you've created.
+
+(Required)
+ -n NAME     Specify the name of the generated keypair. This is used for the filenames.
+
+(Optional)
+ -l LIFETIME Specify the duration for which this certificate should be valid, in days. Defaults to
+             365.
+EOM
+  exit 1
+fi
+
+generate_selfsigned "${NAME}" "${LIFETIME}"
