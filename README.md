@@ -6,7 +6,7 @@ This is a Docker container that can be used to generate a closed network of TLS 
 
 ## To Use
 
- 1. You'll need a directory to store input and output.
+ 1. You'll need a directory to store output.
 
     ```bash
     mkdir certificates
