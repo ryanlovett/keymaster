@@ -1,6 +1,6 @@
 # keymaster
 
-:key: *OpenSSL convenience scripts*
+:key: *OpenSSL convenience scripts - Forked from cloudpipe/keymaster *
 
 This is a Docker container that can be used to generate a closed network of TLS credentials, suitable for use among sets of microservices that only need to (and only *should*) communicate among themselves.
 
@@ -12,19 +12,21 @@ This is a Docker container that can be used to generate a closed network of TLS 
     mkdir certificates
     ```
 
- 1. Generate a password and store it in a file called `password` within that directory.
-
-    ```bash
-    touch certificates/password
-    chmod 600 certificates/password
-    cat /dev/random | head -c 128 | base64 > certificates/password
-    ```
-
- 1. Run the container with different commands to create a certificate authority, signed keypairs or self-signed keypairs. You'll need to mount your input/output directory to the path `/certificates` within the container.
+ 1. Prepare the environment. docker is run with an output directory mounted to the path `/certificates` within the container.
 
     ```bash
     KEYMASTER="docker run --rm -v $(pwd)/certificates/:/certificates/ cloudpipe/keymaster"
+    ```
 
+ 1. Generate a password and store it in a file called `password`.
+
+    ```bash
+    ${KEYMASTER} mkpassword
+    ```
+
+ 1. Run the container with different commands to create a certificate authority, signed keypairs or self-signed keypairs.
+
+    ```bash
     # Certificate authority
     # certificates/ca.pem and certificates/ca-key.pem
     ${KEYMASTER} ca
