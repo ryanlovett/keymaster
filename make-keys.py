@@ -5,21 +5,22 @@
 # 
 # Runs from jupyterhub-deploy/ and uses "inventory" and "vault-password" files.
 
+import os
 import subprocess
 import ansible.inventory
 
-DEBUG = True
+DEBUG = False
 
 KEYMASTER = ["docker", "run", "--rm", "-v",
-	cwd + "/../certificates/:/certificates/", "ds/keymaster"]
+	os.getcwd() + "/../certificates/:/certificates/", "ds/keymaster"]
 
 if DEBUG: KEYMASTER = ["echo"] + KEYMASTER
 
 subprocess.call(KEYMASTER + ["mkpassword"])
 subprocess.call(KEYMASTER + ["ca"])
 
-vault_password = open('vault-password').read().strip()
-inv = ansible.inventory.Inventory(host_list='inventory', vault_password=vault_password)
+vault_password = open('../jupyterhub-deploy/vault-password').read().strip()
+inv = ansible.inventory.Inventory(host_list='../jupyterhub-deploy/inventory', vault_password=vault_password)
 for host in inv.get_group('all').get_hosts():
 	keyname = host.name
 	ip = host.vars['fqdn']
